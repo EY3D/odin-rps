@@ -1,14 +1,115 @@
 const choices = ["rock", "paper", "scissors"];
-let roundCounter = 0;
+/*let roundCounter = 0;*/
 let playerScore = 0;
 let comScore = 0;
 let playerSelection;
+let computerSelection;
+let victoryText;
+let result;
 
-function playerPlay(){
-  playerSelection = prompt("Please input your choice: rock, paper, scissors").toLowerCase();
-  while (!(choices.includes(playerSelection))){
-    playerSelection = prompt("Error! Please input your choice: rock, paper, scissors").toLowerCase();
-  }
+const resultText = document.createElement('span');
+const pSelectionText = document.createElement('span');
+const cSelectionText = document.createElement('span');
+const pScore = document.createElement('span');
+const cScore = document.createElement('span');
+const vText = document.createElement('span');
+const BtnNewGame = document.createElement('button');
+
+const resultQuery = document.querySelector('#results');
+const playerChoiceQuery = document.querySelector('#playerChoice');
+const comChoiceQuery = document.querySelector('#comChoice');
+const pScoreQuery = document.querySelector('#pScore');
+const cScoreQuery = document.querySelector('#cScore');
+const vTextQuery = document.querySelector('#vText');
+
+BtnNewGame.style.display = "block";
+BtnNewGame.textContent = "New Game";
+BtnNewGame.addEventListener("click", () => {
+    window.location.reload();
+})
+
+const btnRock = document.querySelector('#rock');
+btnRock.addEventListener('click', () => {
+    playerSelection = "rock";
+    
+    playRound(playerSelection);
+    if (result === "You have won this round!") {
+        playerScore += 1;
+    }
+    if (result === "You have lost this round.") {
+        comScore += 1;
+    }
+    if (result === "Tied.") {
+        console.log(result);
+    }
+    changePlayerText();
+    changeComText();
+    changeResultText()
+    checkVictory();
+})
+
+const btnPaper = document.querySelector('#paper');
+btnPaper.addEventListener('click', () => {
+    playerSelection = "paper";
+   
+    playRound(playerSelection);
+    if (result === "You have won this round!") {
+        playerScore += 1;
+    }
+    if (result === "You have lost this round.") {
+        comScore += 1;
+    }
+    if (result === "Tied.") {
+        console.log(result);
+    }
+    changePlayerText();
+    changeComText();
+    changeResultText()
+    checkVictory();
+})
+
+const btnScissors = document.querySelector('#scissors');
+btnScissors.addEventListener('click', () => {
+    playerSelection = "scissors";
+
+    playRound(playerSelection);
+    if (result === "You have won this round!") {
+        playerScore += 1;
+    }
+    if (result === "You have lost this round.") {
+        comScore += 1;
+    }
+    if (result === "Tied.") {
+        console.log(result);
+    }
+    changePlayerText();
+    changeComText();
+    changeResultText()
+    checkVictory();
+})
+
+function changePlayerText() {
+    console.log(playerSelection + ' selected.');
+    pSelectionText.textContent = playerSelection;
+    playerChoiceQuery.appendChild(pSelectionText);
+
+    console.log("Player score: " + playerScore);
+    pScore.textContent = playerScore;
+    pScoreQuery.appendChild(pScore);
+}
+
+function changeComText() {
+    cSelectionText.textContent = computerSelection;
+    comChoiceQuery.appendChild(cSelectionText);
+
+    console.log("Computer score: " + comScore);
+    cScore.textContent = comScore;
+    cScoreQuery.appendChild(cScore);
+}
+
+function changeResultText() {
+    resultText.textContent = result;
+    resultQuery.appendChild(resultText);
 }
 
 function computerPlay(){
@@ -17,47 +118,40 @@ function computerPlay(){
 
 //Compares the selection and returns a string
 
-function playRound(player, com){
-  let p = player.toLowerCase();
-  
-  if (p === "rock" && com === "paper"){
-    return "playerLost";
-  } else if (p === "rock" && com === "scissors"){
-    return "playerWin";
-  } else if (p === "paper" && com === "scissors") {
-    return "playerLost";
-  } else if (p === "paper" && com === "rock"){
-    return "playerWin";
-  } else if (p === "scissors" && com === "rock"){
-    return "playerLost";
-  } else if (p === "scissors" && com === "paper"){
-    return "playerWin"
+function playRound(p) {
+  computerSelection = computerPlay();
+  if (p === "rock" && computerSelection === "paper"){
+    result = "You have lost this round.";
+  } else if (p === "rock" && computerSelection === "scissors"){
+    result = "You have won this round!";
+  } else if (p === "paper" && computerSelection === "scissors") {
+    result = "You have lost this round.";
+  } else if (p === "paper" && computerSelection === "rock"){
+    result = "You have won this round!";
+  } else if (p === "scissors" && computerSelection === "rock"){
+    result = "You have lost this round.";
+  } else if (p === "scissors" && computerSelection === "paper"){
+    result = "You have won this round!"
   } else {
-    return "tie";
+    result = "Tied.";
   }
-
 }
 
-function game(){
-  roundCounter++;
-  let computerSelection = computerPlay();
-  if (playRound(playerSelection, computerSelection) === "playerWin"){
-    playerScore++;
-    console.log(`You win! Computer has chosen ${computerSelection} and player has chosen ${playerSelection}.`);
-    alert(`You win! Computer has chosen ${computerSelection} and player has chosen ${playerSelection}.`);
-  } else if (playRound(playerSelection, computerSelection) === "playerLost"){
-    console.log(`You lost! Computer has chosen ${computerSelection} and player has chosen ${playerSelection}.`);
-    alert(`You lost! Computer has chosen ${computerSelection} and player has chosen ${playerSelection}.`);
-    comScore++;
-  } else {
-    console.log(`Tie! Computer has chosen ${computerSelection} and player has chosen ${playerSelection}.`);
-    alert(`Tie! Computer has chosen ${computerSelection} and player has chosen ${playerSelection}.`);
-  }
-  console.log(`Round: ${roundCounter}\nYour score: ${playerScore}\nComputer score: ${comScore}\n\n`);
-  alert(`Round: ${roundCounter}\nYour score: ${playerScore}\nComputer score: ${comScore}\n\n`);
-}
-
-for (i = 0; i <5; i++){
-  playerPlay();
-  game();
+function checkVictory() {
+    if (playerScore === 5) {
+        playerScore = 0;
+        comScore = 0;
+        victoryText = "Player wins!";
+        vText.textContent = victoryText;
+        vTextQuery.appendChild(vText);
+        vTextQuery.appendChild(BtnNewGame);
+    }
+    if (comScore === 5) {
+        playerScore = 0;
+        comScore = 0;
+        victoryText = "Computer wins!";
+        vText.textContent = victoryText;
+        vTextQuery.appendChild(vText);
+        vTextQuery.appendChild(BtnNewGame);
+    }
 }
